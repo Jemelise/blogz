@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <a href="/blog">Main Blog Page</a>
+
+    <a style="margin: 25px;" href="/newpost">Add A Blog Entry</a>
+
+    <h1 style="text-align:center;">Add A Blog Entry</h1>
+    <form method='post'>
+        <label>
+            Title for your new blog:
+            <br>
+            <input type="text" name='blog_title' />
+            <br>
+            <br>
+            <br>
+            Your new blog:
+            <br>
+            <textarea rows="6" cols="25" name="blog_content" >
+                    </textarea>
+            <br>     
+            <br>
+            <br>  
+            <input type="submit" value="Add Entry" />
+        </label>
+        
+    </form>
+
+
+    
+
+           
+{% endblock %}
