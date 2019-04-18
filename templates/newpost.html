@@ -1,23 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <a href="/blog">Main Blog Page</a>
-
-    <a style="margin: 25px;" href="/newpost">Add A Blog Entry</a>
 
     <h1 style="text-align:center;">Add A Blog Entry</h1>
     <form method='post'>
         <label>
             Title for your new blog:
             <br>
-            <input type="text" name='blog_title' />
+            <input type="text" value="{{blog_title}}" name='blog_title' />
+            <span class='err'> {{ title_error_message }}</span><br>
             <br>
             <br>
             <br>
             Your new blog:
             <br>
-            <textarea rows="6" cols="25" name="blog_content" >
-                    </textarea>
+            <textarea rows="6" cols="25" name="blog_content">{{blog_content}}</textarea>
+            <span class='err'> {{ content_error_message }}</span><br>
             <br>     
             <br>
             <br>  

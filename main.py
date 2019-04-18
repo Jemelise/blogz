@@ -36,14 +36,30 @@ def index():
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
 
+    title_error_message = ""
+    content_error_message = ""
+    blog_title = ""
+    blog_content = ""
+
     if request.method == 'POST':
         blog_title = request.form['blog_title']
         blog_content = request.form['blog_content']
-        new_blog = Blog(blog_title, blog_content)
-        db.session.add(new_blog)
-        db.session.commit()
-    
-    return render_template('newpost.html',title="Add Blog Entry")        
+
+        if not blog_title:   
+            title_error_message = "please fill in title"
+
+        if not blog_content:
+            content_error_message = "please fill in content"    
+
+        if not (title_error_message  + content_error_message):
+        
+            new_blog = Blog(blog_title, blog_content)
+            db.session.add(new_blog)
+            db.session.commit()
+            return redirect("/blog")
+
+    return render_template('newpost.html',title="Add Blog Entry", title_error_message=title_error_message,
+    content_error_message=content_error_message, blog_title=blog_title, blog_content=blog_content)        
 
 if __name__ == '__main__':
     app.run()
