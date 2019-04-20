@@ -28,6 +28,12 @@ def index():
         new_blog = Blog(blog_name)
         db.session.add(new_blog)
         db.session.commit()
+    
+    if request.method == "GET":
+        id=request.args.get("id")
+        if id:
+            blog=Blog.query.filter_by(id=id).first()
+            return render_template("blogpage.html", title=blog.title, content=blog.content)
 
     blogs = Blog.query.all()
     
