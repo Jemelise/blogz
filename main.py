@@ -34,7 +34,12 @@ class User(db.Model):
         self.username = username
         self.password = password
 
-     
+@app.before_request
+def require_login(): 
+    allowed_routes = ["login", "index"]
+    if request.endpoint not in allowed_routes and "user" not in session:
+        return redirect("/login")  
+
 @app.route("/signup", methods=["POST", "GET"])
 def signup():
 
@@ -80,16 +85,12 @@ def signup():
             db.session.add(new_user)
             db.session.commit()
             session["username"] = username
-            return redirect("/newpost")                                 
-
-        # if not (username_error_message + password_error_message + verify_error_message):
-        #     return redirect("/newpost")     
+            return redirect("/newpost")                                     
 
     return render_template("signup.html", username_error_message=username_error_message, 
     password_error_message=password_error_message, verify_error_message=verify_error_message,
     username=username, existing_username_error_message=existing_username_error_message)    
    
-#
 @app.route("/login", methods=["POST", "GET"])
 def login():
 
@@ -103,21 +104,21 @@ def login():
             return redirect("/login")
 
         if user.password == password:
-            session["user"] = user.username
+            session["user"] = username
             return redirect("/newpost")
-    return render_template("login.html")        
-# #
-# @app.route("/index")
-# def indexdup():
 
-#
+    return render_template("login.html")        
+
+# @app.route("/")
+# def home():
+
+
 @app.route("/logout")
 def logout():
     del session["user"]
     return redirect("/blog")
 #     session.pop('username', None)
 #     return redirect("/blog")  
-
 
 @app.route('/blog', methods=['POST', 'GET'])
 def index():
@@ -136,9 +137,8 @@ def index():
 
     blogs = Blog.query.all()
     
-    return render_template('index.html',title="something blog",blogs=blogs)
+    return render_template('blog.html',title="something blog",blogs=blogs)
 
-# todo new parameter to consider with the relationship
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
 
