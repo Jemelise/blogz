@@ -35,10 +35,60 @@ class User(db.Model):
         self.password = password
 
      
-@app.route("/signup")
+@app.route("/signup", methods=["POST", "GET"])
 def signup():
+
+    username = ""
+  
+    username_error_message = ""
+    password_error_message = ""
+    verify_error_message = ""
+    existing_username_error_message = ""
+
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        verify = request.form["verify"]
+        length_username = len(username)
+        length_password = len(password)
+
+        existing_user = User.query.filter_by(username=username).first()
+
+        if existing_user:  
+            existing_username_error_message = "Username already exists" 
+
+        elif not username:
+            username_error_message = "*Incomplete form, enter username"
+
+        elif length_username < 3:
+            username_error_message = "Invalid username"
+
+        if not password:
+            password_error_message = "*Incomplete form, enter password"
+
+        if length_password < 3:
+            password_error_message = "Invalid password"    
+
+        if not verify:
+            verify_error_message = "*Incomplete form, verify password"     
+
+        if password != verify:
+            verify_error_message = "Passwords do not match"  
+
+        if not existing_user and not username_error_message:
+            new_user = User(username, password)
+            db.session.add(new_user)
+            db.session.commit()
+            session["username"] = username
+            return redirect("/newpost")                                 
+
+        # if not (username_error_message + password_error_message + verify_error_message):
+        #     return redirect("/newpost")     
+
+    return render_template("signup.html", username_error_message=username_error_message, 
+    password_error_message=password_error_message, verify_error_message=verify_error_message,
+    username=username, existing_username_error_message=existing_username_error_message)    
    
-    return render_template("signup.html")
 #
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -60,9 +110,11 @@ def login():
 # @app.route("/index")
 # def indexdup():
 
-# #
-# @app.route("/logout")
-# def logout():
+#
+@app.route("/logout")
+def logout():
+    del session["user"]
+    return redirect("/blog")
 #     session.pop('username', None)
 #     return redirect("/blog")  
 
