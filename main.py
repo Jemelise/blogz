@@ -124,19 +124,16 @@ def logout():
 @app.route('/blog', methods=['GET'])
 def blog_list():
   
-    #if request.method == "GET":
     id=request.args.get("id")
     username=request.args.get("user")
 
     if id:
         blog=Blog.query.filter_by(id=id).first()
-        author=User.query.filter_by(id=blog.owner_id).first()
-        return render_template("blogpage.html", title=blog.title, content=blog.content, author=author)
+        return render_template("blogpage.html", title=blog.title, content=blog.content, author=blog.owner)
 
     if username:
         author=User.query.filter_by(username=username).first()
-        blogs=Blog.query.filter_by(owner_id=author.id).all()
-        return render_template("singleuser.html", blogs=blogs, author=author)
+        return render_template("singleuser.html", blogs=author.blogs, author=author)
     blogs = Blog.query.all()
     
     return render_template('blog.html',title="something blog",blogs=blogs)

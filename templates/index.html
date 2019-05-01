@@ -7,7 +7,7 @@
 {% else %}
     <ul>
         {% for author in authors %}
-            <li><a href="./blog?id={{author.id}}" >{{ author.username }}</a></li>   
+            <li><a href="./blog?user={{author.username}}" >{{ author.username }}</a></li>   
         {% endfor %}
     </ul>     
 {% endif %}
