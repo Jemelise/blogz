@@ -14,15 +14,14 @@ class Blog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
-    content = db.Column(db.Text(500)) ## could be text instead
+    content = db.Column(db.Text(500))
     owner_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-
+ 
     def __init__(self, title, content, owner):
         self.title = title
         self.content = content
         self.owner = owner
-        
-# ## todo for blogz
+
 class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
@@ -36,7 +35,7 @@ class User(db.Model):
 
 @app.before_request
 def require_login(): 
-    allowed_routes = ["login", "index"]
+    allowed_routes = ["login", "blog_list", "index", "signup"]
     if request.endpoint not in allowed_routes and "user" not in session:
         return redirect("/login")  
 
@@ -109,32 +108,35 @@ def login():
 
     return render_template("login.html")        
 
-# @app.route("/")
-# def home():
+@app.route("/")
+def index():
+    authors = User.query.all()
+    return render_template("index.html", authors=authors)
 
 
 @app.route("/logout")
 def logout():
     del session["user"]
     return redirect("/blog")
-#     session.pop('username', None)
-#     return redirect("/blog")  
+#    session.pop('username', None)
+#    return redirect("/blog")  
 
-@app.route('/blog', methods=['POST', 'GET'])
-def index():
+@app.route('/blog', methods=['GET'])
+def blog_list():
+  
+    #if request.method == "GET":
+    id=request.args.get("id")
+    username=request.args.get("user")
 
-    if request.method == 'POST':
-        blog_name = request.form['blog']
-        new_blog = Blog(blog_name)
-        db.session.add(new_blog)
-        db.session.commit()
-    
-    if request.method == "GET":
-        id=request.args.get("id")
-        if id:
-            blog=Blog.query.filter_by(id=id).first()
-            return render_template("blogpage.html", title=blog.title, content=blog.content)
+    if id:
+        blog=Blog.query.filter_by(id=id).first()
+        author=User.query.filter_by(id=blog.owner_id).first()
+        return render_template("blogpage.html", title=blog.title, content=blog.content, author=author)
 
+    if username:
+        author=User.query.filter_by(username=username).first()
+        blogs=Blog.query.filter_by(owner_id=author.id).all()
+        return render_template("singleuser.html", blogs=blogs, author=author)
     blogs = Blog.query.all()
     
     return render_template('blog.html',title="something blog",blogs=blogs)

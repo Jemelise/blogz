@@ -2,7 +2,14 @@
 
 {% block content %}
 
-
-
+{% if authors|length == 0 %}
+    <p>No authors yet</p>
+{% else %}
+    <ul>
+        {% for author in authors %}
+            <li><a href="./blog?id={{author.id}}" >{{ author.username }}</a></li>   
+        {% endfor %}
+    </ul>     
+{% endif %}
 
 {% endblock %}
