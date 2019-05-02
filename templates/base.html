@@ -1,12 +1,19 @@
     
 <!doctype html>
 <html>
-    <head>
+    <head> 
+        <style> 
+        body { 
+            background-image: url({{ url_for('static', filename='blogz_background.jpg') }}) 
+            }
+        </style>
+
         <title>{{title}}</title>
-        <link rel="stylesheet" href="static/style.css"></link>
+        <link rel="stylesheet" href="static/style.css" type="text/css">
+        
     </head>
 <body>
-
+   
     <nav>
         <a href="/">Home</a>
 

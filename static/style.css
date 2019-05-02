@@ -1,0 +1,23 @@
+
+.err {
+    color:red;
+}
+
+h1 {
+    color: rgb(52, 44, 165);
+    text-shadow: 3px 2px gray;
+    font-family: Verdana;
+    letter-spacing: 1px;
+}
+
+h2 {
+    color: rgb(52, 44, 165);
+    text-shadow: 3px 2px gray;
+    font-family: Verdana;
+    letter-spacing: 1px;
+}
+
+body {
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
