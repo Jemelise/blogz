@@ -124,8 +124,6 @@ def index():
 def logout():
     del session["user"]
     return redirect("/blog")
-#    session.pop('username', None)
-#    return redirect("/blog")  
 
 @app.route('/blog', methods=['GET'])
 def blog_list():
@@ -175,4 +173,3 @@ def newpost():
 
 if __name__ == '__main__':
     app.run()
-    
